@@ -25,11 +25,7 @@ func main() {
 	// }
 
 	e.GET("/", func(c echo.Context) error {
-		// problems.Logger = c
-		// // return c.HTML(http.StatusOK, "Hello, Docker! <3")
-		// // input := []int{3, 5, 13, 14, 5, 12}
-		// returnString := problems.ConcurrentTree(10)
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+		return c.JSON(http.StatusOK, struct{ Status string }{Status: "yep we exist"})
 	})
 
 	e.GET("/ping", func(c echo.Context) error {
