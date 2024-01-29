@@ -40,7 +40,7 @@ problemloop:
 
 		select {
 		case <-timer.C:
-			fmt.Println("Times up, moving on to the next question")
+			fmt.Println("Times up")
 			break problemloop
 		case userAnswer := <-userAnswersChan:
 			if userAnswer == answers[index] {
