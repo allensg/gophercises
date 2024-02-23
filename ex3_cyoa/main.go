@@ -1,49 +1,69 @@
 package main
 
 import (
-	"net/http"
+	"encoding/json"
+	"fmt"
 	"os"
+)
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/gommon/log"
+type (
+	// Adventure defines the struct for a json adventure
+	Adventure struct {
+		Segment []Segment
+	}
+
+	Segment struct {
+		Title   string    `json:"title"`
+		Story   []string  `json: story`
+		Options []Options `json: options`
+	}
+
+	Options struct {
+		Text string `json:"text"`
+		Arc  string `json:"arc"`
+	}
 )
 
 func main() {
 
-	e := echo.New()
+	// read the json file
+	moduleTitle := ""
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Logger.SetLevel(log.DEBUG)
+	adventure, err := decode()
 
-	// envVars := make(map[string]string)
-
-	// Initialize handler
-	// problems := &problems.Handler{
-	// 	Env: envVars,
-	// }
-
-	e.GET("/", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "yep we exist"})
-	})
-
-	e.GET("/ping", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
-	})
-
-	e.GET("/cyoa", func(c echo.Context) error {
-		// problems.Logger = c
-		// // return c.HTML(http.StatusOK, "Hello, Docker! <3")
-		// // input := []int{3, 5, 13, 14, 5, 12}
-		// returnString := problems.ConcurrentTree(10)
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
-	})
-
-	httpPort := os.Getenv("HTTP_PORT")
-	if httpPort == "" {
-		httpPort = "8080"
+	for _, segment := range adventure.Segment {
+		fmt.Println(segment)
 	}
 
-	e.Logger.Fatal(e.Start(":" + httpPort))
+	fmt.Println(adventure)
+	if err != nil {
+
+		// if error is not nil
+		// print error
+		fmt.Println(err)
+	}
+
+	// prompt the user
+	fmt.Print("Welcome to the choose your own adventure terminal input because webapps aren't worth the time")
+
+	fmt.Print(fmt.Sprintf("You have chosen the %s module ", moduleTitle))
+
+	//define game loop
+
+}
+
+func decode() (*Adventure, error) {
+	// adventure := make(map[string]interface{})
+	file, err := os.ReadFile("gopher.json")
+	adventure := &Adventure{}
+	if err != nil {
+		return adventure, err
+	}
+	err = json.Unmarshal(file, &adventure)
+
+	if err != nil {
+		return adventure, err
+	}
+
+	return adventure, nil
 }
